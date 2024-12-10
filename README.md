@@ -1,5 +1,9 @@
 # CF-Template-Java
 
+## Release 
+
+https://github.com/x1uc/CF-Template-Java/releases
+
 ## Description
 
 1. The IntelliJ plugin used in conjunction with the Chrome extension "competitive-companion".
