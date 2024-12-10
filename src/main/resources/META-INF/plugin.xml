@@ -1,0 +1,41 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>top.x1uc.CF-Template-Java</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>CF-Template-Java</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="ccuix@qq.com" url="https://www.yourcompany.com">x1uc</vendor>
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    <h2>Codeforces Java Template Generator</h2>
+    <p>This plugin helps competitive programmers save time by generating a pre-configured Java template for Codeforces contests.</p>
+   ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="top.x1uc.codeforces.service.TemplateService"
+                            serviceImplementation="top.x1uc.codeforces.service.impl.TemplateServiceImpl"/>
+        <postStartupActivity  implementation="top.x1uc.codeforces.ServerStartupActivity"/>
+        <notificationGroup
+                id="CodeForces Notify"
+                displayType="BALLOON"
+                isLogByDefault="true" />
+        <applicationConfigurable
+                instance="top.x1uc.codeforces.config.CodeForcesTemplateConfigurable"
+                displayName="CodeForces Template Configuration"
+        />
+        <applicationService serviceImplementation="top.x1uc.codeforces.storage.CodeForcesTemplateGlobalSettings"/>
+    </extensions>
+
+</idea-plugin>
