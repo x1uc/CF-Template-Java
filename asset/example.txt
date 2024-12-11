@@ -9,14 +9,14 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 public class Problme_ {
+    static FastScanner fs = new FastScanner();
+    static PrintWriter out = new PrintWriter(System.out);
 
     private static void solve() {
 
     }
 
     public static void main(String[] args) {
-        FastScanner fs = new FastScanner();
-        PrintWriter out = new PrintWriter(System.out);
         int T = fs.nextInt();
         while (T-- > 0) {
             solve();

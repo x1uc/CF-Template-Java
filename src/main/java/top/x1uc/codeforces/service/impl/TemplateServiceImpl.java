@@ -2,8 +2,12 @@ package top.x1uc.codeforces.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import top.x1uc.codeforces.notify.NotificationUtil;
 import top.x1uc.codeforces.pojo.ProblemTemplate;
 import top.x1uc.codeforces.service.TemplateService;
@@ -58,7 +62,6 @@ public class TemplateServiceImpl implements TemplateService {
         // generateFile
         generateFile(problemTemplate);
     }
-
     private String getProblemInfo(Socket clientSocket) {
         try (InputStream in = clientSocket.getInputStream(); OutputStream out = clientSocket.getOutputStream()) {
 
@@ -70,7 +73,6 @@ public class TemplateServiceImpl implements TemplateService {
             // response client 
             String response = "HTTP/1.1 200 OK\r\n\r\n";
             out.write(response.getBytes(StandardCharsets.UTF_8));
-            
             // return body
             return body;
         } catch (IOException e) {
@@ -79,7 +81,6 @@ public class TemplateServiceImpl implements TemplateService {
         }
         return null;
     }
-
     private void generateFile(ProblemTemplate problemTemplate) {
         
         CodeForcesTemplateGlobalSettings globalSettings = CodeForcesTemplateGlobalSettings.getInstance();
@@ -105,6 +106,15 @@ public class TemplateServiceImpl implements TemplateService {
                     writer.write(content);
                     writer.flush();
                     NotificationUtil.showNotification(project, "Notify", fileName + " success generation", NotificationType.INFORMATION);
+                    // Use invokeLater to ensure that UI operations are executed on the EDT .
+                    ApplicationManager.getApplication().invokeLater(() -> {
+                        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+                        if (virtualFile != null) {
+                            FileEditorManager.getInstance(project).openFile(virtualFile, true);
+                        } else {
+                            NotificationUtil.showNotification(project, "Error", "Failed to open generation file", NotificationType.ERROR);
+                        }
+                    });
                 }
             } else {
                 NotificationUtil.showNotification(project, "Error", "Fail to create file", NotificationType.ERROR);
